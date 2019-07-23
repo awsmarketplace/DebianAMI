@@ -9,6 +9,8 @@
 | `DIST` | The Debian distribution to release, currently only `buster`.
 | `VERSION` | The image version to release, e.g. `20190718-412`.
 
+* After receiving the finished notification from Microsoft, login to [Azure Cloudpartner portal](https://cloudpartner.azure.com/) and select "Go live".
+
 ## Variables
 
 ### Per project

@@ -18,7 +18,41 @@ before_script:
     "${DEBIAN_SSH_REMOTE}"
     /mnt
 
-upload debian release:
+####
+# Provider uploads for release builds
+####
+
+azure upload release:
+  stage: vendor upload
+  image: debian:buster
+  script:
+    - >
+      shopt -s nullglob;
+      ./tools/bin/debian-cloud-images upload-azure-cloudpartner
+      --config-file "${CONFIG}"
+      --variant release
+      ${NOTIFY_EMAIL:+--publish "${NOTIFY_EMAIL}"}
+      /mnt/${DIST}/daily/${VERSION}/*-azure-*.json
+      /mnt/${DIST}-backports/daily/${VERSION}/*-azure-*.json
+  only:
+    refs:
+      - triggers
+      - web
+    variables:
+      - $DIST == "buster"
+  tags:
+    - debian-cloud-images-upload
+  artifacts:
+    name: upload-azure
+    expire_in: 7 days
+    paths:
+      - '*.upload-azure-cloudpartner.json'
+
+####
+# Own upload for release builds
+####
+
+upload release:
   stage: upload
   image: debian:buster
   script:
