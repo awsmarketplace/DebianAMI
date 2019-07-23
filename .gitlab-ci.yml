@@ -1,0 +1,46 @@
+---
+stages:
+  - vendor upload
+  - upload
+
+variables:
+  GIT_DEPTH: "1"
+  GIT_SUBMODULE_STRATEGY: normal
+
+before_script:
+  - apt-get update
+  - apt-get install --no-install-recommends -y python3-libcloud python3-marshmallow qemu-utils sshfs
+  - chmod 600 ${DEBIAN_SSH_KEY}
+  - >
+    sshfs
+    -o IdentityFile=${DEBIAN_SSH_KEY}
+    -o VerifyHostKeyDNS=yes
+    "${DEBIAN_SSH_REMOTE}"
+    /mnt
+
+upload debian release:
+  stage: upload
+  image: debian:buster
+  script:
+    - >
+      shopt -s nullglob;
+      ./tools/bin/debian-cloud-images upload
+      --variant release
+      --provider cloud.debian.org
+      --storage /mnt
+      /mnt/${DIST}/daily/${VERSION}/*.json
+      /mnt/${DIST}-backports/daily/${VERSION}/*.json
+      *.json
+  only:
+    refs:
+      - triggers
+      - web
+    variables:
+      - $DIST == "buster"
+  tags:
+    - debian-cloud-images-upload
+  artifacts:
+    name: upload
+    expire_in: 7 days
+    paths:
+      - '*.upload.json'
