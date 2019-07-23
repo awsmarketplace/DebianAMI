@@ -1,0 +1,3 @@
+[submodule "tools"]
+	path = tools
+	url = https://salsa.debian.org/cloud-team/debian-cloud-images.git
