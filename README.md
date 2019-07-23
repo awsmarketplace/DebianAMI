@@ -5,7 +5,7 @@
 * Run a pipeline on the `master` branch via [webinterface](https://salsa.debian.org/cloud-team/debian-cloud-images-release/pipelines/new), specifying following variables:
 
 | Name | Description
-|+++|+++|
+|---|---|
 | `DIST` | The Debian distribution to release, currently only `buster`.
 | `VERSION` | The image version to release, e.g. `20190718-412`.
 
@@ -17,6 +17,7 @@
 
 * `$DEBIAN_SSH_KEY`
 * `$DEBIAN_SSH_REMOTE`
+* `$NOTIFY_EMAIL`
 
 ### Per trigger
 
