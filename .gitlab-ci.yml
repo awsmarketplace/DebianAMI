@@ -10,6 +10,11 @@ variables:
 before_script:
   - apt-get update
   - apt-get install --no-install-recommends -y python3-libcloud python3-marshmallow qemu-utils sshfs
+  - |
+    if [ "$CI_DISPOSABLE_ENVIRONMENT" ]; then
+      # Workaround unsupported SEEK_HOLE in overlayfs (Docker default)
+      mount -t tmpfs none /tmp
+    fi
   - chmod 600 ${DEBIAN_SSH_KEY}
   - >
     sshfs
