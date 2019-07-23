@@ -2,7 +2,7 @@
 
 ## How to make a release
 
-* Trigger a build on the `master` branch, specifying following variables:
+* Run a pipeline on the `master` branch via [webinterface](https://salsa.debian.org/cloud-team/debian-cloud-images-release/pipelines/new), specifying following variables:
 
 | Name | Description
 |+++|+++|
