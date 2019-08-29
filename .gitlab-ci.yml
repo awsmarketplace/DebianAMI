@@ -74,6 +74,29 @@ azure golive release:
   - debian-official
   allow_failure: false
 
+ec2 upload release:
+  stage: vendor upload
+  image: debian:buster
+  script:
+  - >
+    ./bin/debian-cloud-images upload-ec2
+    --config-file "${CONFIG}"
+    --variant release
+    /mnt/${DIST}/daily/${VERSION}/*ec2*.json
+  only:
+    refs:
+    - triggers
+    - web
+    variables:
+    - $DIST == "buster"
+  tags:
+  - debian-official
+  artifacts:
+    name: upload-ec2
+    expire_in: 7 days
+    paths:
+    - '*.upload-ec2.json'
+
 ####
 # Own upload for release builds
 ####
