@@ -46,6 +46,7 @@ azure upload release:
     - web
     variables:
     - $DIST == "buster"
+    - $RELEASE_AZURE_ENABLED == "1"
   tags:
   - debian-official
   artifacts:
@@ -70,6 +71,7 @@ azure golive release:
     - web
     variables:
     - $DIST == "buster"
+    - $RELEASE_AZURE_ENABLED == "1"
   tags:
   - debian-official
   allow_failure: false
@@ -89,6 +91,7 @@ ec2 upload release:
     - web
     variables:
     - $DIST == "buster"
+    - $RELEASE_EC2_ENABLED == "1"
   tags:
   - debian-official
   artifacts:
@@ -112,6 +115,7 @@ ec2 golive release:
     - web
     variables:
     - $DIST == "buster"
+    - $RELEASE_EC2_ENABLED == "1"
   tags:
   - debian-cloud-images-upload
   allow_failure: false

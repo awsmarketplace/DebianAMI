@@ -8,6 +8,8 @@
 |---|---|
 | `DIST` | The Debian distribution to release, currently only `buster`.
 | `VERSION` | The image version to release, e.g. `20190718-412`.
+| `UPLOAD_AZURE_ENABLED` | Set to '1' to enable generation and release to Microsoft Azure
+| `RELEASE_EC2_ENABLED` | Set to '1' to enable generation and publication to Amazon Web Services
 
 * After receiving the finished notification from Microsoft, manually run the `golive` job.
 
@@ -26,3 +28,5 @@ Environment variables needs to be configured in the GitLab web interface.
 
 * `$DIST`: Must be `buster`
 * `$VERSION`
+* `$UPLOAD_AZURE_ENABLED`
+* `$RELEASE_EC2_ENABLED`
