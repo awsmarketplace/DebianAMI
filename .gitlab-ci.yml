@@ -1,28 +1,28 @@
 ---
 stages:
-  - vendor upload
-  - upload
-  - vendor golive
+- vendor upload
+- upload
+- vendor golive
 
 variables:
   GIT_DEPTH: "1"
   GIT_SUBMODULE_STRATEGY: normal
 
 before_script:
-  - apt-get update
-  - apt-get install --no-install-recommends -y python3-libcloud python3-marshmallow qemu-utils sshfs
-  - |
-    if [ "$CI_DISPOSABLE_ENVIRONMENT" ]; then
-      # Workaround unsupported SEEK_HOLE in overlayfs (Docker default)
-      mount -t tmpfs none /tmp
-    fi
-  - chmod 600 ${DEBIAN_SSH_KEY}
-  - >
-    sshfs
-    -o IdentityFile=${DEBIAN_SSH_KEY}
-    -o VerifyHostKeyDNS=yes
-    "${DEBIAN_SSH_REMOTE}"
-    /mnt
+- apt-get update
+- apt-get install --no-install-recommends -y python3-libcloud python3-marshmallow qemu-utils sshfs
+- |
+  if [ "$CI_DISPOSABLE_ENVIRONMENT" ]; then
+    # Workaround unsupported SEEK_HOLE in overlayfs (Docker default)
+    mount -t tmpfs none /tmp
+  fi
+- chmod 600 ${UPLOAD_SSH_KEY}
+- >
+  sshfs
+  -o IdentityFile=${UPLOAD_SSH_KEY}
+  -o VerifyHostKeyDNS=yes
+  "${UPLOAD_SSH_REMOTE}"
+  /mnt
 
 ####
 # Provider uploads for release builds
@@ -32,46 +32,46 @@ azure upload release:
   stage: vendor upload
   image: debian:buster
   script:
-    - >
-      shopt -s nullglob;
-      ./tools/bin/debian-cloud-images upload-azure-cloudpartner
-      --config-file "${CONFIG}"
-      --variant release
-      ${NOTIFY_EMAIL:+--publish "${NOTIFY_EMAIL}"}
-      /mnt/${DIST}/daily/${VERSION}/*-azure-*.json
-      /mnt/${DIST}-backports/daily/${VERSION}/*-azure-*.json
+  - >
+    shopt -s nullglob;
+    ./tools/bin/debian-cloud-images upload-azure-cloudpartner
+    --config-file "${UPLOAD_CONFIG}"
+    --variant release
+    ${UPLOAD_AZURE_NOTIFY_EMAIL:+--publish "${UPLOAD_AZURE_NOTIFY_EMAIL}"}
+    /mnt/${DIST}/daily/${VERSION}/*-azure-*.json
+    /mnt/${DIST}-backports/daily/${VERSION}/*-azure-*.json
   only:
     refs:
-      - triggers
-      - web
+    - triggers
+    - web
     variables:
-      - $DIST == "buster"
+    - $DIST == "buster"
   tags:
-    - debian-cloud-images-upload
+  - debian-official
   artifacts:
     name: upload-azure
     expire_in: 7 days
     paths:
-      - '*.upload-azure-cloudpartner.json'
+    - '*.upload-azure-cloudpartner.json'
 
 azure golive release:
   stage: vendor golive
   image: debian:buster
   script:
-    - >
-      ./tools/bin/debian-cloud-images release-azure-cloudpartner
-      --config-file "${CONFIG}"
-      --publisher debian
-      --offer debian-10
+  - >
+    ./tools/bin/debian-cloud-images release-azure-cloudpartner
+    --config-file "${UPLOAD_CONFIG}"
+    --publisher debian
+    --offer debian-10
   when: manual
   only:
     refs:
-      - triggers
-      - web
+    - triggers
+    - web
     variables:
-      - $DIST == "buster"
+    - $DIST == "buster"
   tags:
-    - debian-cloud-images-upload
+  - debian-official
   allow_failure: false
 
 ####
@@ -82,25 +82,25 @@ upload release:
   stage: upload
   image: debian:buster
   script:
-    - >
-      shopt -s nullglob;
-      ./tools/bin/debian-cloud-images upload
-      --variant release
-      --provider cloud.debian.org
-      --storage /mnt
-      /mnt/${DIST}/daily/${VERSION}/*.json
-      /mnt/${DIST}-backports/daily/${VERSION}/*.json
-      *.json
+  - >
+    shopt -s nullglob;
+    ./tools/bin/debian-cloud-images upload
+    --variant release
+    --provider cloud.debian.org
+    --storage /mnt
+    /mnt/${DIST}/daily/${VERSION}/*.json
+    /mnt/${DIST}-backports/daily/${VERSION}/*.json
+    *.json
   only:
     refs:
-      - triggers
-      - web
+    - triggers
+    - web
     variables:
-      - $DIST == "buster"
+    - $DIST == "buster"
   tags:
-    - debian-cloud-images-upload
+  - debian-official
   artifacts:
     name: upload
     expire_in: 7 days
     paths:
-      - '*.upload.json'
+    - '*.upload.json'
