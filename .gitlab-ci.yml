@@ -47,7 +47,7 @@ azure upload release:
     variables:
       - $DIST == "buster"
   tags:
-    - debian-cloud-images-upload
+  - debian-official
   artifacts:
     name: upload-azure
     expire_in: 7 days
@@ -71,7 +71,7 @@ azure golive release:
     variables:
       - $DIST == "buster"
   tags:
-    - debian-cloud-images-upload
+  - debian-official
   allow_failure: false
 
 ####
