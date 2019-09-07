@@ -16,12 +16,12 @@ before_script:
     # Workaround unsupported SEEK_HOLE in overlayfs (Docker default)
     mount -t tmpfs none /tmp
   fi
-- chmod 600 ${DEBIAN_SSH_KEY}
+- chmod 600 ${UPLOAD_SSH_KEY}
 - >
   sshfs
-  -o IdentityFile=${DEBIAN_SSH_KEY}
+  -o IdentityFile=${UPLOAD_SSH_KEY}
   -o VerifyHostKeyDNS=yes
-  "${DEBIAN_SSH_REMOTE}"
+  "${UPLOAD_SSH_REMOTE}"
   /mnt
 
 ####
@@ -35,9 +35,9 @@ azure upload release:
   - >
     shopt -s nullglob;
     ./tools/bin/debian-cloud-images upload-azure-cloudpartner
-    --config-file "${CONFIG}"
+    --config-file "${UPLOAD_CONFIG}"
     --variant release
-    ${NOTIFY_EMAIL:+--publish "${NOTIFY_EMAIL}"}
+    ${UPLOAD_AZURE_NOTIFY_EMAIL:+--publish "${UPLOAD_AZURE_NOTIFY_EMAIL}"}
     /mnt/${DIST}/daily/${VERSION}/*-azure-*.json
     /mnt/${DIST}-backports/daily/${VERSION}/*-azure-*.json
   only:
@@ -60,7 +60,7 @@ azure golive release:
   script:
   - >
     ./tools/bin/debian-cloud-images release-azure-cloudpartner
-    --config-file "${CONFIG}"
+    --config-file "${UPLOAD_CONFIG}"
     --publisher debian
     --offer debian-10
   when: manual
