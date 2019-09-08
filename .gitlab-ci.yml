@@ -45,8 +45,7 @@ azure upload release:
     - triggers
     - web
     variables:
-    - $DIST == "buster"
-    - $RELEASE_AZURE_ENABLED == "1"
+    - $DIST == "buster" && $RELEASE_AZURE_ENABLED == "1"
   tags:
   - debian-official
   artifacts:
@@ -60,6 +59,7 @@ azure golive release:
   image: debian:buster
   script:
   - >
+    shopt -s nullglob;
     ./tools/bin/debian-cloud-images release-azure-cloudpartner
     --config-file "${UPLOAD_CONFIG}"
     --publisher debian
@@ -70,8 +70,7 @@ azure golive release:
     - triggers
     - web
     variables:
-    - $DIST == "buster"
-    - $RELEASE_AZURE_ENABLED == "1"
+    - $DIST == "buster" && $RELEASE_AZURE_ENABLED == "1"
   tags:
   - debian-official
   allow_failure: false
@@ -81,17 +80,17 @@ ec2 upload release:
   image: debian:buster
   script:
   - >
-    ./bin/debian-cloud-images upload-ec2
-    --config-file "${CONFIG}"
+    shopt -s nullglob;
+    ./tools/bin/debian-cloud-images upload-ec2
+    --config-file "${UPLOAD_CONFIG}"
     --variant release
-    /mnt/${DIST}/daily/${VERSION}/*ec2*.json
+    /mnt/${DIST}/daily/${VERSION}/*-ec2-*.json
   only:
     refs:
     - triggers
     - web
     variables:
-    - $DIST == "buster"
-    - $RELEASE_EC2_ENABLED == "1"
+    - $DIST == "buster" && $RELEASE_EC2_ENABLED == "1"
   tags:
   - debian-official
   artifacts:
@@ -105,6 +104,7 @@ ec2 golive release:
   image: debian:buster
   script:
   - >
+    shopt -s nullglob;
     ./tools/bin/debian-cloud-images release-ec2
     --config-file "${CONFIG}"
     "${AMI_NAME}"
@@ -114,8 +114,7 @@ ec2 golive release:
     - triggers
     - web
     variables:
-    - $DIST == "buster"
-    - $RELEASE_EC2_ENABLED == "1"
+    - $DIST == "buster" && $RELEASE_EC2_ENABLED == "1"
   tags:
   - debian-cloud-images-upload
   allow_failure: false
