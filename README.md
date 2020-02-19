@@ -17,7 +17,6 @@
 
 Environment variables needs to be configured in the GitLab web interface.
 
- * `$UPLOAD_CONFIG`
  * `$UPLOAD_AZURE_NOTIFY_EMAIL`: Run Azure publish process and send report to given e-mail address.
  * `$UPLOAD_SSH_KEY`
  * `$UPLOAD_SSH_REMOTE`

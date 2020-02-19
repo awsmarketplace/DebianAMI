@@ -35,7 +35,7 @@ azure upload release:
   - >
     shopt -s nullglob;
     ./tools/bin/debian-cloud-images upload-azure-cloudpartner
-    --config-file "${UPLOAD_CONFIG}"
+    --config-file config.yml
     --variant release
     ${UPLOAD_AZURE_NOTIFY_EMAIL:+--publish "${UPLOAD_AZURE_NOTIFY_EMAIL}"}
     /mnt/${DIST}/daily/${VERSION}/*-azure-*.json
@@ -60,7 +60,7 @@ azure golive release:
   script:
   - >
     ./tools/bin/debian-cloud-images release-azure-cloudpartner
-    --config-file "${UPLOAD_CONFIG}"
+    --config-file config.yml
     --publisher debian
     --offer debian-10
   when: manual
@@ -81,7 +81,7 @@ ec2 upload release:
   - >
     shopt -s nullglob;
     ./tools/bin/debian-cloud-images upload-ec2
-    --config-file "${UPLOAD_CONFIG}"
+    --config-file config.yml
     --variant release
     --permission-public
     /mnt/${DIST}/daily/${VERSION}/*-ec2-*.json
@@ -110,6 +110,7 @@ upload release:
   - >
     shopt -s nullglob;
     ./tools/bin/debian-cloud-images upload
+    --config-file config.yml
     --variant release
     --provider cloud.debian.org
     --storage /mnt
